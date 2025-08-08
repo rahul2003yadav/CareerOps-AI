@@ -112,6 +112,7 @@
 // export default Header;
 // Header.jsx
 // Header.jsx
+// Header.jsx
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -138,23 +139,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Client-side subcomponent for auth UI, must have "use client"
+// Client component: MUST HAVE "use client" at top
 const ClientHeader = ({ dbUser }) => {
   "use client";
 
-  const { isSignedIn } = useUser();
+  const { isSignedIn } = useUser(); // Allowed only in client component
 
   return (
     <div className="flex items-center space-x-2 md:space-x-4">
       {isSignedIn ? (
         <>
-          {/* Industry Insights Links */}
+          {/* Signed-in UI */}
           <Link href="/dashboard" legacyBehavior>
             <a>
-              <Button
-                variant="outline"
-                className="hidden md:inline-flex items-center gap-2"
-              >
+              <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
                 <LayoutDashboard className="h-4 w-4" />
                 Industry Insights
               </Button>
@@ -163,8 +161,6 @@ const ClientHeader = ({ dbUser }) => {
               </Button>
             </a>
           </Link>
-
-          {/* Growth Tools Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="flex items-center gap-2">
@@ -173,7 +169,6 @@ const ClientHeader = ({ dbUser }) => {
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem asChild>
                 <Link href="/resume" className="flex items-center gap-2">
@@ -195,8 +190,6 @@ const ClientHeader = ({ dbUser }) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* User profile button */}
           <UserButton
             appearance={{
               elements: {
@@ -219,14 +212,13 @@ const ClientHeader = ({ dbUser }) => {
   );
 };
 
-// Async server-side Header component fetching user data
+// Server component: async, calls checkUser, does NOT call useUser()
 const Header = async () => {
-  const dbUser = await checkUser();
+  const dbUser = await checkUser(); // server-only data fetching
 
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/">
           <Image
             src="/logo.jpg"
@@ -236,8 +228,7 @@ const Header = async () => {
             className="h-12 py-1 w-auto object-contain"
           />
         </Link>
-
-        {/* Client-side auth-aware menu */}
+        {/* Render client component, passing server data as props */}
         <ClientHeader dbUser={dbUser} />
       </nav>
     </header>
@@ -245,3 +236,4 @@ const Header = async () => {
 };
 
 export default Header;
+
