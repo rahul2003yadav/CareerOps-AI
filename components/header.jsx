@@ -110,9 +110,6 @@
 // };
 
 // export default Header;
-// Header.jsx
-// Header.jsx
-// Header.jsx
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -139,17 +136,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Client component: MUST HAVE "use client" at top
 const ClientHeader = ({ dbUser }) => {
-  "use client";
+  "use client"; // **Must be the first line inside function**
 
-  const { isSignedIn } = useUser(); // Allowed only in client component
+  const { isSignedIn } = useUser();
 
   return (
     <div className="flex items-center space-x-2 md:space-x-4">
       {isSignedIn ? (
         <>
-          {/* Signed-in UI */}
           <Link href="/dashboard" legacyBehavior>
             <a>
               <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
@@ -212,9 +207,8 @@ const ClientHeader = ({ dbUser }) => {
   );
 };
 
-// Server component: async, calls checkUser, does NOT call useUser()
 const Header = async () => {
-  const dbUser = await checkUser(); // server-only data fetching
+  const dbUser = await checkUser();
 
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
@@ -228,7 +222,6 @@ const Header = async () => {
             className="h-12 py-1 w-auto object-contain"
           />
         </Link>
-        {/* Render client component, passing server data as props */}
         <ClientHeader dbUser={dbUser} />
       </nav>
     </header>
@@ -236,4 +229,5 @@ const Header = async () => {
 };
 
 export default Header;
+
 
