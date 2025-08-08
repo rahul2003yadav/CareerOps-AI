@@ -110,104 +110,15 @@
 // };
 
 // export default Header;
+// Header.jsx (server component)
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
-import {
-  PenBox,
-  LayoutDashboard,
-  FileText,
-  GraduationCap,
-  ChevronDown,
-  StarsIcon,
-} from "lucide-react";
 import { checkUser } from "@/lib/checkUser";
-import {
-  SignedOut,
-  SignInButton,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-const ClientHeader = ({ dbUser }) => {
-  "use client"; // **Must be the first line inside function**
-
-  const { isSignedIn } = useUser();
-
-  return (
-    <div className="flex items-center space-x-2 md:space-x-4">
-      {isSignedIn ? (
-        <>
-          <Link href="/dashboard" legacyBehavior>
-            <a>
-              <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
-                <LayoutDashboard className="h-4 w-4" />
-                Industry Insights
-              </Button>
-              <Button variant="ghost" className="md:hidden w-10 h-10 p-0">
-                <LayoutDashboard className="h-4 w-4" />
-              </Button>
-            </a>
-          </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <StarsIcon className="h-4 w-4" />
-                <span className="hidden md:block">Growth Tools</span>
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem asChild>
-                <Link href="/resume" className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  Build Resume
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/ai-cover-letter" className="flex items-center gap-2">
-                  <PenBox className="h-4 w-4" />
-                  Cover Letter
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/interview" className="flex items-center gap-2">
-                  <GraduationCap className="h-4 w-4" />
-                  Interview Prep
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <UserButton
-            appearance={{
-              elements: {
-                avatarBox: "w-10 h-10",
-                userButtonPopoverCard: "shadow-xl",
-                userPreviewMainIdentifier: "font-semibold",
-              },
-            }}
-            afterSignOutUrl="/"
-          />
-        </>
-      ) : (
-        <SignedOut>
-          <SignInButton>
-            <Button variant="outline">Sign In</Button>
-          </SignInButton>
-        </SignedOut>
-      )}
-    </div>
-  );
-};
+import ClientHeader from "./ClientHeader"; // Import your client component here
 
 const Header = async () => {
+  // Fetch user info server-side (database etc)
   const dbUser = await checkUser();
 
   return (
@@ -222,6 +133,8 @@ const Header = async () => {
             className="h-12 py-1 w-auto object-contain"
           />
         </Link>
+
+        {/* Render client-side auth-aware menu */}
         <ClientHeader dbUser={dbUser} />
       </nav>
     </header>
@@ -229,5 +142,3 @@ const Header = async () => {
 };
 
 export default Header;
-
-
