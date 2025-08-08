@@ -111,6 +111,7 @@
 
 // export default Header;
 // Header.jsx
+// Header.jsx
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -124,7 +125,12 @@ import {
   StarsIcon,
 } from "lucide-react";
 import { checkUser } from "@/lib/checkUser";
-import { SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import {
+  SignedOut,
+  SignInButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -132,7 +138,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// ClientHeader component (runs on client for real-time auth state updates)
+// Client-side subcomponent for auth UI, must have "use client"
 const ClientHeader = ({ dbUser }) => {
   "use client";
 
@@ -142,6 +148,7 @@ const ClientHeader = ({ dbUser }) => {
     <div className="flex items-center space-x-2 md:space-x-4">
       {isSignedIn ? (
         <>
+          {/* Industry Insights Links */}
           <Link href="/dashboard" legacyBehavior>
             <a>
               <Button
@@ -157,6 +164,7 @@ const ClientHeader = ({ dbUser }) => {
             </a>
           </Link>
 
+          {/* Growth Tools Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="flex items-center gap-2">
@@ -165,6 +173,7 @@ const ClientHeader = ({ dbUser }) => {
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem asChild>
                 <Link href="/resume" className="flex items-center gap-2">
@@ -187,6 +196,7 @@ const ClientHeader = ({ dbUser }) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* User profile button */}
           <UserButton
             appearance={{
               elements: {
@@ -209,13 +219,14 @@ const ClientHeader = ({ dbUser }) => {
   );
 };
 
-// Main async Header component (server side)
+// Async server-side Header component fetching user data
 const Header = async () => {
   const dbUser = await checkUser();
 
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
+        {/* Logo */}
         <Link href="/">
           <Image
             src="/logo.jpg"
@@ -226,6 +237,7 @@ const Header = async () => {
           />
         </Link>
 
+        {/* Client-side auth-aware menu */}
         <ClientHeader dbUser={dbUser} />
       </nav>
     </header>
